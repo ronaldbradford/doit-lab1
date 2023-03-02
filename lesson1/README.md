@@ -41,7 +41,8 @@ INFO:     Application startup complete.
 NOTE: Perform the following in a different session
 
 ```
-curl -s http://127.0.0.1:8000 | jq .
+URL="http://127.0.0.1:8000"
+curl -s "${URL}" | jq .
 ```
 
 Your response should be
@@ -61,7 +62,7 @@ This confirms the container is running.
 ## Test our endpoint
 
 ```
-ENDPOINT="http://127.0.0.1:8000/telemetry"
+ENDPOINT="${URL}/telemetry"
 curl -s ${ENDPOINT} | jq .
 ```
 
@@ -196,8 +197,8 @@ And you would receive an applicable error and non 200 response.
 FastAPI offers a number of benefits, including self documenting APIs. Check out these pages http://localhost:8000/docs & http://localhost:8000/redoc
 
 ```
-open http://localhost:8000/docs
-open http://localhost:8000/redoc
+open ${URL}/docs
+open ${URL}/redoc
 ```
 
 This ends the lesson.
