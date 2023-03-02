@@ -191,7 +191,7 @@ And you would receive an applicable error and non 200 response.
 }
 ```
 
-## Bonsus
+## Bonus
 
 FastAPI offers a number of benefits, including self documenting APIs. Check out these pages http://localhost:8000/docs & http://localhost:8000/redoc
 
