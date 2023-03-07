@@ -1,23 +1,23 @@
 # Telemetry Collector Specs
 
-* Complete this lab before the March Breakroom session (Date TBD)
-* Group work is welcome (divide-and-conquer)
+- Complete this lab before the March Breakroom session (Date TBD)
+- Group work is welcome (divide-and-conquer)
 
 ## Requirements
-* Any cloud platform
-* Public REST API to accept HTTPS POST requests
-* Request body as defined below (see curl example)
-* Reproducible deployment (you might need this project in other Lab)
+- Any cloud platform
+- Public REST API to accept HTTPS POST requests
+- Request body as defined below (see curl example)
+- Reproducible deployment (you might need this project in other Lab)
 
 # Objective
-* Accept POST requests with JSON payload (below)
-* Persist the data
-* Data should be ready for analytics within 15 seconds (data freshness)
-* Run analytics to answer the following questions:
-** Number of requests per device id
-** Bucketed number of requests per device id (num/req per minute per device)
-** AVG and MAX CPU for a given time period (time period is input)
-** AVG and MAX Memory for a given time period (time period is input)
+- Accept POST requests with JSON payload (below)
+- Persist the data
+- Data should be ready for analytics within 15 seconds (data freshness)
+- Run analytics to answer the following questions:
+  - Number of requests per device id
+  - Bucketed number of requests per device id (num/req per minute per device)
+  - AVG and MAX CPU for a given time period (time period is input)
+  - AVG and MAX Memory for a given time period (time period is input)
 # Bonus
 * Authentication
 * Dashboard (Graphs or UI to view the analytics)
@@ -57,7 +57,6 @@ Payload details ([JSON Schema Ref](http://json-schema.org/understanding-json-sch
 * cpu_usage: NUMBER between 0 <= X <= 1
 
 Note: [Sanitize and validate your inputs!](https://www.explainxkcd.com/wiki/index.php/Little_Bobby_Tables)
-
 
 
 Source: https://docs.google.com/document/d/1tsFFqSYDCi6v0MZ3_uo_igIAKAmRxyNLo1t40EfXA50/edit#
