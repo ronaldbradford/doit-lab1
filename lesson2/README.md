@@ -20,6 +20,7 @@ pip install -r requirements.txt
 
 We will require the `sam` command to complete this lesson.  See https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
 
+### MacOS
 ```
 TMP_DIR=${TMP_DIR:-/tmp}
 cd ${TMP_DIR}
@@ -27,7 +28,14 @@ wget https://github.com/aws/aws-sam-cli/releases/download/v1.73.0/aws-sam-cli-ma
 sudo installer -pkg ${TMP_DIR}/aws-sam-cli-macos-arm64.pkg -target /
 sam --version
 ```
-
+### Linux
+```
+MP_DIR=${TMP_DIR:-/tmp}
+cd ${TMP_DIR}
+wget https://github.com/aws/aws-sam-cli/releases/download/v1.73.0/aws-sam-cli-linux-x86_64.zip
+unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+sudo ./sam-installation/install
+sam --version
 ```
 SAM CLI, version 1.73.0
 ```
@@ -116,7 +124,7 @@ You can now browse to the above endpoints to invoke your functions. You do not n
 2023-03-02 09:52:37  * Running on http://127.0.0.1:3000/ (Press CTRL+C to quit)
 ```
 
-## Testing the Sererless container locallly
+## Testing the Serverless container locally
 
 You can now repeat the steps in Lesson 1, however using port 3000 instead of 8000.
 
@@ -179,7 +187,6 @@ We repeat the same steps we have done previously, with the adjusted HTTP url.
 ```
 ENDPOINT="${URL}/telemetry"
 curl -s ${ENDPOINT} | jq .
-curl -s -X POST ${ENDPOINT} | jq .
 curl -s -X POST ${ENDPOINT} | jq .
 PAYLOAD='{"timestamp": "2023-01-31T12:34:56.789Z", "device_id": "abc123","memory_usage": 0.45, "cpu_usage": 0.23}'
 jq . <<< ${PAYLOAD}
