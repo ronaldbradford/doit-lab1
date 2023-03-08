@@ -1,6 +1,6 @@
 # Doit - Lab 1 - Telemetry Collector Specs
 
-See [SPECS.md](SPECS.md) for information regarding the purpose of this Application Modernization lab execise.
+See [SPECS.md](SPECS.md) for information regarding the purpose of this Application Modernization lab exercise.
 
 # Pre-requisites
 
@@ -29,7 +29,7 @@ Write an API to support the initial lab requirements. For this example we will u
 - [Pydantic](https://docs.pydantic.dev/)
   - 3.10 features are not possible
 
-With just a few lines of code we can create an API that accepts the required JSON payload at the `/telementy` endpoint and validates that the input matches the required validation specification.
+With just a few lines of code we can create an API that accepts the required JSON payload at the `/telemetry` endpoint and validates that the input matches the required validation specification.
 
 Checkout [Lesson 1](lesson1/README.md) for step-by-step instructions.
 
@@ -67,14 +67,21 @@ In addition to the prior lessons completed [SPECS.md](SPECS.md) points.
 * Handle 1k rps
 * Maybe low latency (data is not yet persisted)
 
-# Step 4
+# Step 4 - RDS Aurora
 
 We must now decide how to persist the data per API call. This is the more traditional 'n' tier architecture approach of inserting the data, whereas streaming the collected data to a producer would enable different applications to consume the data anyway they like.  To evaluate the potential options, we will consider the traditional database approach first.
 
 The objective of this lab is to use Serverless technologies when possible to reduce cost.
-The lab also have specific analytic queries as part of the initial requirements.  Options for storage include:
+The lab also have specific analytic queries as part of the initial requirements.  Options for storage may include:
 
 * RDS Aurora serverless RDBMS
 * DynamoDB key-value store
 * Redshift Serverless data warehouse
 * Amazon Timesteam - serverless time-stream database
+
+
+Checkout [Lesson 4](lesson4/README.md) for step-by-step instructions.
+
+In addition to the prior lessons completed [SPECS.md](SPECS.md) points.
+* Persist the data
+* Demonstrate Analytics via SQL
