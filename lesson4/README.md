@@ -1,6 +1,6 @@
 # Lesson 4
 
-// NOTE: This lesson is a WIP, see TODOs
+**<span style="color:red">NOTE: This lesson is a WIP, see TODOs</span>**
 
 ## Setup a Python Virtual Environment
 
@@ -11,7 +11,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-//TODO mysql-connector-python failed, reverted to pymysql (AWS lambda examples)
+* <span style="color:red">TODO mysql-connector-python failed, reverted to pymysql (AWS lambda examples)</span>
 
 ## Install needed Python Packages
 
@@ -21,21 +21,27 @@ pip install -r src/requirements.txt
 
 ## Create an Aurora MySQL Cluster
 
+We will start with using an RDS MySQL RDBMS due to comfort level and simplicity. The following references can help you create this resource.
+
+- [Creating an Amazon Aurora DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.CreateInstance.html) (amazon.com)
+- [AWS CLI Tutorials](https://github.com/ronaldbradford/aws-tutorial) - Fully cut/paste ready (github.com/ronaldbradford)
+
+After understanding the attributes and steps of an RDS Cluster, internally you can request repo access to these [RDS one-liners](https://doitintl.atlassian.net/wiki/spaces/CRE/pages/160989240/Data+Environment+Customer+Emulation) under development in my personal focus time.
 
 ```
 . rds-functions
 create-mysql-cluster
 sql
 ```
-//TODO Launch a Serverless cluster, not a normal cluster
 
-For access to these [RDS one-liners](https://doitintl.atlassian.net/wiki/spaces/CRE/pages/160989240/Data+Environment+Customer+Emulation) ask for repo access.
+* <span style="color:red">TODO Launch a Serverless cluster, not a normal cluster</span>
+
 
 
 ## Deploy Tables and User permissions
 
-//TODO We have hardcoded schema/user/password that should be parameterized for productization into template.yaml
-//     ideally in a AWS secret
+* <span style="color:red">TODO We have hardcoded schema/user/password that should be parameterized for productization into template.yaml</span>
+* <span style="color:red">ideally in a AWS secret</span>
 
 ```
 cd sql/aurora-mysql
@@ -45,18 +51,48 @@ mysql> source 02-tables.sql
 mysql> source 03-user.sql
 ```
 
+## Parameterization
+
+The following deployment scripts use a per environment customizable `.envrc` which include certain values specific to your individual AWS Account.
+
+See [Create Security Group for RDS Aurora](https://github.com/ronaldbradford/aws-tutorial/blob/main/ec2/create-rds-security-group.md) for AWS CLI statements to create the EC2 security group (which you would have done when creating the cluster)
+
+* <span style="color:red">TODO This should be refactored in CloudFormation template.</span>
+
+You can obtain these values with the `aws` cli.
+
+```
+VPC_ID=$(aws ec2 describe-vpcs --query '*[0].VpcId' --output text)
+SUBNET_IDS=$(aws ec2 describe-subnets --filters Name=vpc-id,Values=${VPC_ID} | jq -r '.Subnets[].SubnetId' | tr '\n' ',' | sed -e "s/,\$"//)
+SG_NAME="rds-aurora-sg"
+SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=${SG_NAME} --query '*[].GroupId' --output text)
+echo ${VPC_ID},${SG_NAME},${SG_ID},${SUBNET_IDS}
+```
+
+For example:
+
+```
+vpc-0a03225585506c531,rds-aurora-sg,sg-03a3319858d105443,"subnet-08e92295ef7d56f04","subnet-01974903db219cd60","subnet-0198174dd811f621d"
+```
+
+Update accordingly
+
+```
+vi .envrc
+```
+
 ## Deploy the Lambda Stack onto S3 (From Lesson 2)
 
 To deploy this as a Lambda we require a top-level S3 bucket.
 
 ```
-. .envrc   # future direnv handling
-[[ $(aws s3 ls s3://${S3_BUCKET} 2>&1 >/dev/null) -ne 0 ]] && aws s3 mb s3://${S3_BUCKET}
+bin/setup.sh
 ```
 
 ### VPC Connectivity
 
-By default the Lambda is not associated to your VPC. You need to add a `VpcConfig` to your CloudFormation template.
+By default a Lambda function is not associated to your VPC. This was not an issue in prior lessons.
+You need to add a `VpcConfig` to your CloudFormation template.
 
 //TODO redo template.yaml to parameterized VPC contents
 

@@ -1,6 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Doit AppMod Lab1 running on Lambda
+Parameters:
+  SGID:
+    Description: EC2 Security Group for datastore ingress
+    Type: String
+  SUBNETIDS:
+    Description: VPC Subnets
+    Type: CommaDelimitedList
 
 Resources:
   Function:
@@ -25,11 +32,9 @@ Resources:
 
       VpcConfig:
         SecurityGroupIds:
-          - sg-03a3319858d105443
+          - !Ref SGID
         SubnetIds:
-          - subnet-08e92295ef7d56f04
-          - subnet-01974903db219cd60
-          - subnet-0198174dd811f621d
+            !Ref SUBNETIDS
 
   Api:
     Type: AWS::Serverless::HttpApi

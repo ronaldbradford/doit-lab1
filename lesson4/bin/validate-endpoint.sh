@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+readonly ENV_FILE=".envrc"
+
+[ ! -s "${ENV_FILE}" ] && echo "Please cd to base directory containing '${ENV_FILE}'" && exit 1
+source ${ENV_FILE}
+
 #
 # Simple script to run a few validation checks for new API endpoint
 #

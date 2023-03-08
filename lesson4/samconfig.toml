@@ -1,0 +1,6 @@
+version=0.1
+[default.deploy.parameters]
+stack_name = "DoitLab1onLambda"
+s3_bucket =  "ronald-doit-lab1"
+capabilities = "CAPABILITY_IAM"
+tags = "project=\"Doit AppMod Lab 1\""
