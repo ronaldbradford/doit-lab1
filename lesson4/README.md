@@ -1,5 +1,7 @@
 # Lesson 4
 
+// NOTE: This lesson is a WIP, see TODOs
+
 ## Setup a Python Virtual Environment
 
 For this lesson we install different Python packages so we will use a dedicated virtual environment.
@@ -14,23 +16,26 @@ source .venv/bin/activate
 ## Install needed Python Packages
 
 ```
-cd src
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ## Create an Aurora MySQL Cluster
 
-//TODO Serverless
 
 ```
 . rds-functions
 create-mysql-cluster
 sql
 ```
+//TODO Launch a Serverless cluster, not a normal cluster
+
 For access to these [RDS one-liners](https://doitintl.atlassian.net/wiki/spaces/CRE/pages/160989240/Data+Environment+Customer+Emulation) ask for repo access.
 
 
 ## Deploy Tables and User permissions
+
+//TODO We have hardcoded schema/user/password that should be parameterized for productization into template.yaml
+//     ideally in a AWS secret
 
 ```
 cd sql/aurora-mysql
@@ -40,50 +45,37 @@ mysql> source 02-tables.sql
 mysql> source 03-user.sql
 ```
 
-
-
 ## Deploy the Lambda Stack onto S3 (From Lesson 2)
 
 To deploy this as a Lambda we require a top-level S3 bucket.
 
 ```
-S3_BUCKET=${USER}-doit-lab1 # Must be top level bucket
+. .envrc   # future direnv handling
 [[ $(aws s3 ls s3://${S3_BUCKET} 2>&1 >/dev/null) -ne 0 ]] && aws s3 mb s3://${S3_BUCKET}
 ```
 
-Deploy this to AWS  (From Lesson 2)
+### VPC Connectivity
+
+By default the Lambda is not associated to your VPC. You need to add a `VpcConfig` to your CloudFormation template.
+
+//TODO redo template.yaml to parameterized VPC contents
+
+Deploy this to AWS  (Same as from Lesson 2)
+
 ```
-STACK_NAME="DoitLab1onLambda"
-sam build
-sam deploy --stack-name "${STACK_NAME}" --s3-bucket ${S3_BUCKET} --capabilities CAPABILITY_IAM | tee deploy.log
-URL=$(grep ^Value deploy.log | awk '{print $2}')
-echo ${URL}
+source bin/deploy.sh
 ```
-
-//TODO I'm unsure if build is part of deploy?
-
-## Connectivity
-
-By default the Lambda is not associated to your VPC.
-
-//TODO redo my lambda to be added to VPC programmatically  
 
 ## Testing on Lambda
 
 We repeat the same steps as in prior lessons with the deployed Lambda HTTP url.
 
 ```
-ENDPOINT="${URL}/telemetry"
-curl -s ${ENDPOINT} | jq .
-curl -s -X POST ${ENDPOINT} | jq .
-PAYLOAD='{"timestamp": "2023-01-31T12:34:56.789Z", "device_id": "abc123","memory_usage": 0.45, "cpu_usage": 0.23}'
-jq . <<< ${PAYLOAD}
-curl -s -X POST -H "Content-Type: application/json" -d "${PAYLOAD}" ${ENDPOINT} | jq .
-PAYLOAD='{"timestamp": "2023-01-31T12:34:56.789Z", "device_id": "abc123","memory_usage": 0.45, "cpu_usage": 1.23}'
-curl -s -X POST -H "Content-Type: application/json" -d "${PAYLOAD}" ${ENDPOINT} | jq .
+bin/validate-endpoint.sh
 ```
 
-If you have issues, you can also deploy locally on an EC2 instance (See [Lesson 2](../lesson2/README.md)).  AWS Cloudwatch will also have detailed logs of lambda executions.
+If you have issues, you can also deploy locally on an EC2 instance (See [Lesson 2](../lesson2/README.md)).
+AWS Cloudwatch will also have detailed logs of lambda executions.
 
 ## Load Testing
 
@@ -138,7 +130,7 @@ FROM telemetry;
 1 row in set (0.12 sec)
 ```
 
-\\TODO I guess I need a better numpy randomization
+//TODO I guess I need a better numpy randomization777
 
 
 
@@ -147,17 +139,13 @@ FROM telemetry;
 And this is how we would cleanup after our lab.
 
 ```
+bin/cleanup.sh
+```
+
+```
+. rds-functions
 cd ~/config/aurora-mysql-<name>
 delete-aurora-cluster
 ```
-
-```
-#export AWS_DEFAULT_REGION=us-east-2
-sam delete --stack-name ${STACK_NAME} --no-prompts --region ${AWS_DEFAULT_REGION}
-
-# Delete bucket
-aws s3 rm s3://${S3_BUCKET}
-```
-
 
 This ends the lesson.

@@ -16,6 +16,20 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref Api
+      Environment:
+        Variables:
+          DBA_USER: api
+          DBA_PASSWD: Doit#Lab1@2023
+          INSTANCE_ENDPOINT: aurora-mysql-bb-0.c4s5ds0rk545.us-east-2.rds.amazonaws.com
+          DATABASE: lab1
+
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-03a3319858d105443
+        SubnetIds:
+          - subnet-08e92295ef7d56f04
+          - subnet-01974903db219cd60
+          - subnet-0198174dd811f621d
 
   Api:
     Type: AWS::Serverless::HttpApi
