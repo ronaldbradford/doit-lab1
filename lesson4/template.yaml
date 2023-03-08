@@ -8,6 +8,9 @@ Parameters:
   SUBNETIDS:
     Description: VPC Subnets
     Type: CommaDelimitedList
+  INSTANCEENDPOINT:
+    Description: The RDS Endpoint
+    Type: String
 
 Resources:
   Function:
@@ -27,7 +30,8 @@ Resources:
         Variables:
           DBA_USER: api
           DBA_PASSWD: Doit#Lab1@2023
-          INSTANCE_ENDPOINT: aurora-mysql-bb-0.c4s5ds0rk545.us-east-2.rds.amazonaws.com
+          INSTANCE_ENDPOINT:
+            !Ref INSTANCEENDPOINT
           DATABASE: lab1
 
       VpcConfig:

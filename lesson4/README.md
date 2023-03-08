@@ -94,8 +94,6 @@ bin/setup.sh
 By default a Lambda function is not associated to your VPC. This was not an issue in prior lessons.
 You need to add a `VpcConfig` to your CloudFormation template.
 
-//TODO redo template.yaml to parameterized VPC contents
-
 Deploy this to AWS  (Same as from Lesson 2)
 
 ```
@@ -119,6 +117,20 @@ Use [Lesson 3](../lesson3/README.md) to send traffic to your endpoint that persi
 
 ## Analytics
 
+### Number of devices
+
+```
+SELECT COUNT(DISTINCT device_id) AS total_devices
+FROM telemetry;
+```
+
+```
++---------------+
+| total_devices |
++---------------+
+|          1846 |
++---------------+
+```
 
 ### Number of requests per device id
 
@@ -166,9 +178,85 @@ FROM telemetry;
 1 row in set (0.12 sec)
 ```
 
-//TODO I guess I need a better numpy randomization777
+### Metrics of devices with most data points
+
+We delete some random samples, hoping that this throws the avg/max off.
+
+```
+DELETE FROM telemetry WHERE MOD(id,155) IN (0,42,99) and id > 0;
+```
+
+This is the top devices metrics for a given time period
+```
+SELECT device_id,
+       COUNT(*) AS data_points,
+       FORMAT(min(data->>'$.cpu_usage'),2) AS min_cpu,
+       FORMAT(avg(data->>'$.cpu_usage'),2) AS avg_cpu,
+       FORMAT(max(data->>'$.cpu_usage'),2) AS max_cpu,
+       FORMAT(min(data->>'$.memory_usage'),2) AS min_memory,
+       FORMAT(avg(data->>'$.memory_usage'),2) AS avg_memory,
+       FORMAT(max(data->>'$.memory_usage'),2) AS max_memory,
+       MAX(entry_ts) AS latest_ts
+FROM telemetry
+WHERE entry_ts > '2023-03-08 17:04:50'
+GROUP BY device_id
+ORDER BY 2 DESC
+LIMIT 10
+```
+
+Example list of devices with top data points.
+
+```
++-----------+-------------+---------+---------+---------+------------+------------+------------+---------------------+
+| device_id | data_points | min_cpu | avg_cpu | max_cpu | min_memory | avg_memory | max_memory | latest_ts           |
++-----------+-------------+---------+---------+---------+------------+------------+------------+---------------------+
+| abc119    |         864 | 0.10    | 0.41    | 0.89    | 0.00       | 0.21       | 0.89       | 2023-03-08 17:21:12 |
+| abc140    |         857 | 0.09    | 0.44    | 0.99    | 0.00       | 0.22       | 1.00       | 2023-03-08 17:21:12 |
+| abc114    |         852 | 0.10    | 0.42    | 0.97    | 0.00       | 0.21       | 0.99       | 2023-03-08 17:21:12 |
+| abc147    |         851 | 0.10    | 0.46    | 1.00    | 0.00       | 0.24       | 0.97       | 2023-03-08 17:21:12 |
+| abc130    |         846 | 0.11    | 0.43    | 0.94    | 0.00       | 0.21       | 0.93       | 2023-03-08 17:21:12 |
+| abc120    |         837 | 0.11    | 0.42    | 0.92    | 0.00       | 0.21       | 0.89       | 2023-03-08 17:21:12 |
+| abc121    |         835 | 0.12    | 0.43    | 0.98    | 0.00       | 0.21       | 0.00       | 2023-03-08 17:21:11 |
+| abc151    |         831 | 0.10    | 0.44    | 1.00    | 0.00       | 0.23       | 0.99       | 2023-03-08 17:21:12 |
+| abc131    |         829 | 0.10    | 0.43    | 0.99    | 0.00       | 0.21       | 0.97       | 2023-03-08 17:21:12 |
+| abc155    |         826 | 0.09    | 0.44    | 0.99    | 0.00       | 0.22       | 0.88       | 2023-03-08 17:21:12 |
++-----------+-------------+---------+---------+---------+------------+------------+------------+---------------------+
+10 rows in set (8.83 sec)
+```
+
+* <span style="color:red">TODO I guess I need a better numpy randomization.</span>
 
 
+## Interactive Dashboard
+
+
+```
+watch --differences -n 0.5 ./status
+```
+
+status
+```
+mysql -u$DBA_USER -p$DBA_PASSWD -h${INSTANCE_ENDPOINT} lab1 < status.sql 2>&1 | grep -v Warning | column -t
+```
+
+status.sql
+
+```
+SELECT COUNT(*) AS entries, COUNT(DISTINCT device_id) AS unique_devices FROM telemetry;
+SELECT device_id,
+       COUNT(*) AS data_points,
+       FORMAT(min(data->>'$.cpu_usage'),2) AS min_cpu,
+       FORMAT(avg(data->>'$.cpu_usage'),2) AS avg_cpu,
+       FORMAT(max(data->>'$.cpu_usage'),2) AS max_cpu,
+       FORMAT(min(data->>'$.memory_usage'),2) AS min_memory,
+       FORMAT(avg(data->>'$.memory_usage'),2) AS avg_memory,
+       FORMAT(max(data->>'$.memory_usage'),2) AS max_memory,
+       MAX(entry_ts) AS latest_ts
+FROM telemetry
+GROUP BY device_id
+ORDER BY 2 DESC
+LIMIT 10
+```
 
 ## Cleanup
 

@@ -11,7 +11,7 @@ sam build  # required to get requirements.txt packages
 # No idea how to get dynamic parameter overrides into file
 # CloudFormation Parameters cannot support '_'
 
-sam deploy --parameter-overrides ParameterKey=SGID,ParameterValue=${SG_ID} ParameterKey=SUBNETIDS,ParameterValue="${SUBNET_IDS}"  $* | tee deploy.log
+sam deploy --parameter-overrides ParameterKey=SGID,ParameterValue=${SG_ID} ParameterKey=SUBNETIDS,ParameterValue="${SUBNET_IDS}" ParameterKey=INSTANCEENDPOINT,ParameterValue="${INSTANCE_ENDPOINT}" $* | tee deploy.log
 
 URL=$(grep ^Value deploy.log | awk '{print $2}')
 echo ${URL}
