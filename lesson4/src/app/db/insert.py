@@ -2,6 +2,7 @@
 import json
 import os
 import pymysql
+from .. import models
 
 dba_user = os.getenv('DBA_USER')
 dba_passwd = os.getenv('DBA_PASSWD')
@@ -22,7 +23,7 @@ def insert(data):
                                host = instance_endpoint,
                                database = schema)
     except pymysql.MySQLError:
-        return '{"success" : "false", "error": "Unable to get connection"}'
+        return models.Status(success=False, error="Unable to get connection")
 
     try:
         cursor = conn.cursor()
@@ -30,7 +31,7 @@ def insert(data):
         cursor.execute(stmt, data)
         conn.commit()
     except pymysql.MySQLError:
-        return '{"success" : "false", "error": "Insert Failed"}'
+        return models.Status(success=False,  error="Insert Failed")
 
     try:
         cursor.close()
@@ -38,4 +39,4 @@ def insert(data):
     except pymysql.MySQLError:
         pass
 
-    return '{"success": "true"}'
+    return models.Status(success=True)
