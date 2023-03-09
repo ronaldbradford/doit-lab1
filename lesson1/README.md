@@ -10,19 +10,19 @@ source .venv/bin/activate
 ## Install needed Python Packages
 
 ```
-cd src
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ## Launch our API in a webapp container
 
 Show code to be executed
 ```
-cat app/__init__.py
+cat src/app/__init__.py
 ```
 
 Run webcontainer
 ```
+cd src
 uvicorn app:app --reload
 ```
 

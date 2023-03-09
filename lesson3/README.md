@@ -19,14 +19,14 @@ We will be using the Python library [Locust](https://locust.io/) for our load te
 
 ```
 # In /lesson3 directory
-cd src
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ## Interactive Locust testing
 
 To use Locust in an interactive mode.
 ```
+cd src
 locust -f test/emulate_load.py     ## TODO background and log to file
 # In separate session
 open http://localhost:8089

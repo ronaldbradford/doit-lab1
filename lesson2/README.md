@@ -12,8 +12,7 @@ source .venv/bin/activate
 ## Install needed Python Packages
 
 ```
-cd src
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ## Install AWS Serverless Application Model

@@ -69,15 +69,15 @@ In addition to the prior lessons completed [SPECS.md](SPECS.md) points.
 
 # Step 4 - RDS Aurora
 
-We must now decide how to persist the data per API call. This is the more traditional 'n' tier architecture approach of inserting the data, whereas streaming the collected data to a producer would enable different applications to consume the data anyway they like.  To evaluate the potential options, we will consider the traditional database approach first.
+We must now decide how to persist the data per API call. This is the more traditional 'n' tier architecture approach of inserting the data, whereas streaming the collected data to a producer (aka Kinesis or MKS) would enable different applications to consume the data anyway they like.  To evaluate the potential options, we will consider the traditional RDBMS database approach first, just because this is safe.
 
-The objective of this lab is to use Serverless technologies when possible to reduce cost.
-The lab also have specific analytic queries as part of the initial requirements.  Options for storage may include:
+The overall objective of this lab is to use Serverless technologies when possible to reduce cost.
+The lab also has specific analytic queries as part of the initial requirements which leads towards a SQL based solution.  Possible AWS options for storage using serverless compute may include:
 
 * RDS Aurora serverless RDBMS
-* DynamoDB key-value store
 * Redshift Serverless data warehouse
 * Amazon Timesteam - serverless time-stream database
+* DynamoDB key-value store (we discount this as it will not provide the analytics functionality)
 
 
 Checkout [Lesson 4](lesson4/README.md) for step-by-step instructions.
