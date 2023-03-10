@@ -85,3 +85,15 @@ Checkout [Lesson 4](lesson4/README.md) for step-by-step instructions.
 In addition to the prior lessons completed [SPECS.md](SPECS.md) points.
 * Persist the data
 * Demonstrate Analytics via SQL
+
+# Next Steps
+
+There are many improvements that can be made, however time while providing customer support is limiting. Some points would include:
+
+- Secure the endpoint. This is a HttpApi endpoint `AWS::Serverless::HttpAp`, whereas a RestApi offers additional benefits. More information
+  - https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html
+  - https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-setup-api-key-with-console.html
+- Provide an admin view summary data endpoint. The first iteration would be to provide a summary of the workload as demonstrated by the backend `watch` command.  A second iteration would enable parameters such as to/from dates.
+- Use a better optimized persistent store.  Redshift would likely be a more ideal solution.
+- Review the original [SPECS.md](SPECS.md) for goals of this lab.
+- Review Lambda and API Gatway configuration for optimizations, only the defaults are used.
