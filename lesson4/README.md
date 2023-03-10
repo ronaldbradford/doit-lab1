@@ -224,9 +224,6 @@ Example list of devices with top data points.
 10 rows in set (8.83 sec)
 ```
 
-* <span style="color:red">TODO I guess I need a better numpy randomization.</span>
-
-
 ## Interactive Dashboard
 
 
