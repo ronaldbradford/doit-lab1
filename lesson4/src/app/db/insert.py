@@ -12,10 +12,6 @@ schema = os.getenv('DATABASE')
 
 def insert(data):
     """ Insert the provided telemetry data into MySQL table """
-    #dba_user = 'api'
-    #dba_passwd = 'Doit#Lab1@2023'
-    #instance_endpoint = 'aurora-mysql-bb-0.c4s5ds0rk545.us-east-2.rds.amazonaws.com'
-    #schema = 'lab1'
 
     try:
         conn = pymysql.connect(user = dba_user,
